@@ -1,12 +1,18 @@
 ---
-- name: Show popup message on Windows
+- name: Show toast notification on Windows
   hosts: windows
   gather_facts: no
 
   tasks:
-    - name: Show Windows popup message
+    - name: Send toast notification
       ansible.builtin.win_shell: |
-        powershell -command "
-        Add-Type -AssemblyName PresentationFramework;
-        [System.Windows.MessageBox]::Show('Hello from Semaphore!', 'Semaphore Test');
+        powershell -ExecutionPolicy Bypass -Command "
+        [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime];
+        $template = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent([Windows.UI.Notifications.ToastTemplateType]::ToastText02);
+        $textNodes = $template.GetElementsByTagName('text');
+        $textNodes.Item(0).AppendChild($template.CreateTextNode('Semaphore Task'));
+        $textNodes.Item(1).AppendChild($template.CreateTextNode('Hello from Semaphore via Ansible!'));
+        $toast = [Windows.UI.Notifications.ToastNotification]::new($template);
+        $notifier = [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('Semaphore');
+        $notifier.Show($toast);
         "
