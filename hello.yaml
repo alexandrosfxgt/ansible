@@ -1,4 +1,9 @@
-TASK [Print a message] ***
-ok: [localhost] => {
-    "msg": "Hello from Semaphore on this server!"
-}
+---
+- name: Hello Test
+  hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: Print a message
+      ansible.builtin.debug:
+        msg: "Hello from Semaphore on localhost"
