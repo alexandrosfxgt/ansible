@@ -1,6 +1,6 @@
 ---
 - name: Hello Test on Windows
-  hosts: 10.10.1.50
+  hosts: windows
   gather_facts: no
 
   tasks:
