@@ -3,6 +3,18 @@
   hosts: windows
   gather_facts: no
 
+  tasks:---
+- name: Show popup message on Windows
+  hosts: windows
+  gather_facts: no
+
   tasks:
+    - name: Show Windows popup message
+      ansible.builtin.win_shell: |
+        powershell -command "
+        Add-Type -AssemblyName PresentationFramework;
+        [System.Windows.MessageBox]::Show('Hello from Semaphore!', 'Semaphore Test');
+        "
+
     - name: Print a message
       ansible.builtin.win_shell: echo "Hello from Semaphore on Windows!"
